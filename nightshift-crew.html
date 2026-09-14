@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nightshift Crew — GTA Online Rank Boosting</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0A0E17;
+    --ink-2: #10151F;
+    --card: #141A26;
+    --line: #262E3D;
+    --paper: #E9E6DC;
+    --paper-dim: #9BA1AE;
+    --amber: #FFB627;
+    --magenta: #FF3D6E;
+    --teal: #12B5A6;
+    --radius: 3px;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'Public Sans', sans-serif;
+    line-height: 1.55;
+  }
+
+  h1, h2, h3, .display {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 900;
+    letter-spacing: 0.01em;
+    margin: 0;
+    color: var(--paper);
+  }
+
+  a { color: inherit; }
+  img, svg { display: block; max-width: 100%; }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Background street-grid texture */
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.18;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  }
+
+  /* NAV */
+  header.site {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(10,14,23,0.88);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+  }
+  .brand {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 900;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+  }
+  .brand span { color: var(--amber); }
+  .nav-links { display: flex; gap: 28px; font-size: 15px; font-weight: 600; }
+  .nav-links a { text-decoration: none; color: var(--paper-dim); transition: color .15s; }
+  .nav-links a:hover { color: var(--paper); }
+  .nav-cta {
+    background: var(--amber);
+    color: #1A1000;
+    padding: 9px 18px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    font-size: 14px;
+    text-decoration: none;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 96px 24px 72px;
+    position: relative;
+  }
+  .hero .kicker {
+    color: var(--teal);
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 18px;
+  }
+  .hero h1 {
+    font-size: clamp(48px, 7vw, 92px);
+    line-height: 0.96;
+    max-width: 780px;
+  }
+  .hero h1 .stroke {
+    -webkit-text-stroke: 2px var(--paper);
+    color: transparent;
+  }
+  .hero p.lede {
+    max-width: 520px;
+    font-size: 18px;
+    color: var(--paper-dim);
+    margin-top: 26px;
+  }
+  .hero-cta-row {
+    display: flex;
+    gap: 16px;
+    margin-top: 36px;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    background: var(--magenta);
+    color: #fff;
+    padding: 14px 26px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-ghost {
+    border: 1px solid var(--line);
+    color: var(--paper);
+    padding: 14px 26px;
+    border-radius: var(--radius);
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 16px;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .disclosure {
+    max-width: 780px;
+    margin-top: 40px;
+    padding: 14px 18px;
+    border-left: 3px solid var(--teal);
+    background: var(--ink-2);
+    font-size: 13.5px;
+    color: var(--paper-dim);
+    border-radius: 0 var(--radius) var(--radius) 0;
+  }
+
+  /* SECTION HEADINGS */
+  section { padding: 80px 24px; border-top: 1px solid var(--line); }
+  .section-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; margin-bottom: 44px; flex-wrap: wrap; }
+  .section-head h2 { font-size: clamp(32px, 4vw, 48px); }
+  .section-head p { color: var(--paper-dim); max-width: 400px; font-size: 15px; }
+
+  /* JOB TICKET CARDS */
+  .tickets { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  @media (max-width: 720px) { .tickets { grid-template-columns: 1fr; } }
+  .ticket {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .ticket::before {
+    content: attr(data-code);
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--paper-dim);
+    opacity: 0.5;
+  }
+  .ticket h3 { font-size: 26px; margin-bottom: 10px; color: var(--paper); }
+  .ticket p { color: var(--paper-dim); font-size: 14.5px; margin-bottom: 18px; }
+  .ticket .price { font-weight: 700; color: var(--amber); font-size: 15px; }
+  .ticket .price span { color: var(--paper-dim); font-weight: 400; }
+
+  /* HOW IT WORKS */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  @media (max-width: 720px) { .steps { grid-template-columns: 1fr; } }
+  .step h3 { font-size: 22px; margin-bottom: 10px; }
+  .step .mark {
+    display: inline-block;
+    width: 40px; height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border: 1px solid var(--teal);
+    color: var(--teal);
+    border-radius: 50%;
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .step p { color: var(--paper-dim); font-size: 14.5px; }
+
+  /* CHAT INTAKE */
+  .intake-shell {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    max-width: 640px;
+    margin: 0 auto;
+    overflow: hidden;
+  }
+  .intake-head {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--teal); }
+  .intake-head strong { font-size: 15px; }
+  .intake-head span { color: var(--paper-dim); font-size: 13px; }
+
+  #chatlog {
+    padding: 22px;
+    min-height: 240px;
+    max-height: 360px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .msg { max-width: 82%; padding: 11px 14px; border-radius: var(--radius); font-size: 14.5px; }
+  .msg.bot { background: var(--ink-2); align-self: flex-start; border: 1px solid var(--line); }
+  .msg.user { background: var(--teal); color: #04211D; align-self: flex-end; font-weight: 600; }
+
+  #choices { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 22px 20px; }
+  .choice-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--paper);
+    padding: 9px 14px;
+    border-radius: var(--radius);
+    font-size: 13.5px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .choice-btn:hover { border-color: var(--amber); color: var(--amber); }
+
+  #freeform-row { display: none; padding: 0 22px 22px; gap: 10px; }
+  #freeform-row.active { display: flex; }
+  #freeform {
+    flex: 1;
+    background: var(--ink-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--paper);
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+  #freeform:focus { outline: none; border-color: var(--teal); }
+
+  .summary-box {
+    display: none;
+    margin: 0 22px 22px;
+    padding: 16px;
+    background: var(--ink-2);
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    font-size: 13.5px;
+    color: var(--paper-dim);
+  }
+  .summary-box.active { display: block; }
+  .summary-box strong { color: var(--paper); display: block; margin-bottom: 8px; font-size: 14px; }
+  .summary-box div.line { margin-bottom: 4px; }
+  .summary-box div.line b { color: var(--paper); font-weight: 600; }
+
+  .submit-row { padding: 0 22px 22px; }
+  .submit-row .btn-primary { width: 100%; text-align: center; }
+  .submit-row .note { font-size: 12px; color: var(--paper-dim); margin-top: 10px; text-align: center; }
+
+  footer {
+    padding: 40px 24px;
+    border-top: 1px solid var(--line);
+    color: var(--paper-dim);
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* AD SLOTS — replace the inner comment in each with your ad network's snippet */
+  .ad-slot {
+    border: 1px dashed var(--line);
+    border-radius: var(--radius);
+    background: var(--ink-2);
+    color: var(--paper-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    text-align: center;
+  }
+  .ad-banner {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 24px;
+    min-height: 90px;
+  }
+  .ad-sidebar-fixed {
+    position: fixed;
+    top: 120px;
+    right: 20px;
+    width: 160px;
+    height: 500px;
+    z-index: 5;
+  }
+  @media (max-width: 1200px) {
+    .ad-sidebar-fixed { display: none; } /* hide on narrower viewports so it doesn't overlap content */
+  }
+</style>
+</head>
+<body>
+
+<div class="grid-bg"></div>
+
+<!-- Sidebar ad — sticks to the right edge on wide screens. Swap the placeholder
+     text below for your ad network's <script>/<ins> tags once approved. -->
+<div class="ad-slot ad-sidebar-fixed">
+  Ad slot — 160x500<!-- AD NETWORK CODE HERE -->
+</div>
+
+<header class="site">
+  <nav class="nav wrap">
+    <div class="brand">NIGHT<span>SHIFT</span> CREW</div>
+    <div class="nav-links">
+      <a href="#contracts">Contracts</a>
+      <a href="#accounts">Accounts</a>
+      <a href="#how">How it works</a>
+      <a href="#intake">Get boosted</a>
+    </div>
+    <a href="#intake" class="nav-cta">Start a job</a>
+  </nav>
+</header>
+
+<section class="hero wrap" style="border-top:none;">
+  <div class="kicker">GTA ONLINE · RANK &amp; JOB BOOSTING</div>
+  <h1>Real players.<br><span class="stroke">Real</span> sessions.<br>Your account stays yours.</h1>
+  <p class="lede">Hire a crew member to grind rank, run heists, or clear a job list with you — live, in normal gameplay. No mod menus, no money glitches, no handing over your login.</p>
+  <div class="hero-cta-row">
+    <a href="#intake" class="btn-primary">Start a job</a>
+    <a href="#contracts" class="btn-ghost">See contracts</a>
+  </div>
+  <div class="disclosure">
+    Nightshift Crew is an independent boosting, carry, and trading service — not affiliated with Rockstar Games or Take-Two Interactive. Everything is done through normal gameplay or player-to-player listings: no cheats, exploits, mod menus, glitched currency, or account passwords requested.
+  </div>
+</section>
+
+<section id="contracts">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Open contracts</h2>
+      <p>Pick a job type. Every session is played live by a real crew member — you can join in or just watch it happen.</p>
+    </div>
+    <div class="tickets">
+      <div class="ticket" data-code="RB-01">
+        <h3>Rank Boost — Standard</h3>
+        <p>Grind from your current rank to a target rank through story missions, jobs, and freemode activities.</p>
+        <div class="price">$3 <span>/ rank, 5 rank minimum</span></div>
+      </div>
+      <div class="ticket" data-code="RB-01B">
+        <h3>Rank Boost — Bulk</h3>
+        <p>Larger rank jumps (20+ ranks) at a lower per-rank rate, split across multiple sessions.</p>
+        <div class="price">$2 <span>/ rank, 20+ ranks</span></div>
+      </div>
+      <div class="ticket" data-code="HT-02">
+        <h3>Heist Completion</h3>
+        <p>A full heist run — setups through finale — played start to finish with a coordinated crew.</p>
+        <div class="price">$20 <span>/ standard heist</span></div>
+      </div>
+      <div class="ticket" data-code="HT-02B">
+        <h3>Heist Completion — Elite</h3>
+        <p>Larger-scale heists (Cayo Perico, Cluckin' Bell, Diamond Casino) run start to finish, elite difficulty.</p>
+        <div class="price">$35 <span>/ elite heist</span></div>
+      </div>
+      <div class="ticket" data-code="CG-03">
+        <h3>Cash Grind Session</h3>
+        <p>Legit money-making activities (businesses, sell missions, contracts) played live for an agreed session length.</p>
+        <div class="price">$12 <span>/ hour</span></div>
+      </div>
+      <div class="ticket" data-code="CO-07">
+        <h3>Career Coaching</h3>
+        <p>One-on-one live coaching — combat, driving, heist strategy, or business setup — no boosting, just skill-building.</p>
+        <div class="price">$10 <span>/ hour</span></div>
+      </div>
+      <div class="ticket" data-code="CT-05">
+        <h3>Cosmetic Account Trade — Starter</h3>
+        <p>Accounts with a modest garage/property collection built through normal play. Ownership verified before listing.</p>
+        <div class="price">From $40</div>
+      </div>
+      <div class="ticket" data-code="CT-05B">
+        <h3>Cosmetic Account Trade — Loaded</h3>
+        <p>High-rank accounts with a full garage, unlocked properties, and rare event cosmetics — all earned legitimately.</p>
+        <div class="price">From $150</div>
+      </div>
+      <div class="ticket" data-code="IC-06">
+        <h3>In-Game Currency</h3>
+        <p>Currency listed by players who earned it through normal play and want to sell it on. We don't list currency sourced from money glitches or exploits.</p>
+        <div class="price">$6 <span>/ $1M in-game</span></div>
+      </div>
+      <div class="ticket" data-code="CJ-04">
+        <h3>Custom Job</h3>
+        <p>Something else — a specific unlock, an achievement run, a friend session. Tell the intake what you need.</p>
+        <div class="price">Quoted after intake</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="accounts">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Accounts for sale</h2>
+      <p>Every account here was leveled through normal gameplay — no mod menus, no glitched cash. Ownership is verified before it's listed.</p>
+    </div>
+    <div class="tickets">
+      <!-- Duplicate one of these cards per real account you have. Swap in the
+           actual rank, garage details, cash on hand, and your real price. -->
+      <div class="ticket" data-code="ACC-101">
+        <h3>Rank 45 Starter</h3>
+        <p>Small garage (4 vehicles), a couple of unlocked businesses, built through story missions and freemode jobs.</p>
+        <div class="price">$45</div>
+      </div>
+      <div class="ticket" data-code="ACC-102">
+        <h3>Rank 120 Mid-Tier</h3>
+        <p>Full business setup (Bunker, Nightclub, Cocaine Lockup), 12-car garage, Kosatka submarine unlocked.</p>
+        <div class="price">$120</div>
+      </div>
+      <div class="ticket" data-code="ACC-103">
+        <h3>Rank 250 Loaded</h3>
+        <p>End-game garage with rare/event vehicles, all major properties unlocked, high in-game cash balance from real grinding.</p>
+        <div class="price">$300</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AD NETWORK CODE HERE -->
+<div class="ad-slot ad-banner" style="min-height:90px;">Ad slot — 728x90</div>
+
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>How a job runs</h2>
+      <p>Three steps, no account handover.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="mark">1</div>
+        <h3>Post the job</h3>
+        <p>Answer a few questions in the intake below — platform, rank, goal, and when you're free to play.</p>
+      </div>
+      <div class="step">
+        <div class="mark">2</div>
+        <h3>A crew member picks it up</h3>
+        <p>You get matched with someone free in your window. They reach out to confirm the session.</p>
+      </div>
+      <div class="step">
+        <div class="mark">3</div>
+        <h3>You play it together</h3>
+        <p>The crew member joins your session in normal freemode — you're online and in control the whole time.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AD NETWORK CODE HERE -->
+<div class="ad-slot ad-banner" style="min-height:90px;">Ad slot — 728x90</div>
+
+<section id="intake">
+  <div class="wrap">
+    <div class="section-head" style="justify-content:center; text-align:center; display:block;">
+      <h2>Start a job</h2>
+      <p style="margin:10px auto 0;">Answer a few quick questions — this goes straight to the crew queue.</p>
+    </div>
+
+    <div class="intake-shell">
+      <div class="intake-head">
+        <div class="dot"></div>
+        <strong>Dispatch</strong>
+        <span>— usually replies in a few questions</span>
+      </div>
+      <div id="chatlog"></div>
+      <div id="choices"></div>
+      <div id="freeform-row">
+        <input id="freeform" type="text" placeholder="Type your answer...">
+        <button class="btn-ghost" style="padding:11px 18px;" onclick="submitFreeform()">Send</button>
+      </div>
+      <div class="summary-box" id="summaryBox">
+        <strong>Job summary</strong>
+        <div id="summaryLines"></div>
+      </div>
+      <div class="submit-row" id="submitRow" style="display:none;">
+        <a href="#" class="btn-primary" id="submitBtn">Send job to dispatch</a>
+        <div class="note">This opens an email to our dispatch inbox with your job summary filled in — nothing is sent automatically.</div>
+        <a href="https://cash.app/$damanidixon7" target="_blank" class="btn-ghost" style="display:block; text-align:center; margin-top:12px;">Pay via Cash App</a>
+        <div class="note">Dispatch will confirm your price first — only pay once you've got a quote for your job.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <div>© 2026 Nightshift Crew. Not affiliated with Rockstar Games or Take-Two Interactive.</div>
+  <div>All jobs played through normal gameplay — no cheats, no mod menus, no account credentials requested.</div>
+</footer>
+
+<script>
+// ---- Scripted dispatch intake ----
+// This is a simple guided flow, not a live model — it collects order details
+// and hands them off by email. No account passwords are ever requested.
+
+const log = document.getElementById('chatlog');
+const choicesEl = document.getElementById('choices');
+const freeformRow = document.getElementById('freeform-row');
+const freeformInput = document.getElementById('freeform');
+const summaryBox = document.getElementById('summaryBox');
+const summaryLines = document.getElementById('summaryLines');
+const submitRow = document.getElementById('submitRow');
+const submitBtn = document.getElementById('submitBtn');
+
+const answers = {};
+let step = 0;
+
+function addMsg(text, who) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + who;
+  div.textContent = text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+}
+
+function clearInputs() {
+  choicesEl.innerHTML = '';
+  freeformRow.classList.remove('active');
+}
+
+const flow = [
+  {
+    key: 'job',
+    bot: "What kind of job are you looking for?",
+    choices: ["Rank Boost", "Heist Completion", "Cash Grind Session", "Cosmetic Account Trade", "In-Game Currency", "Custom Job"]
+  },
+  {
+    key: 'platform',
+    bot: "Which platform are you on?",
+    choices: ["PS5 / PS4", "Xbox", "PC"]
+  },
+  {
+    key: 'handle',
+    bot: "What's your in-game username or gamertag, so we can coordinate the session?",
+    freeform: true
+  },
+  {
+    key: 'current',
+    bot: "Give us a quick status check — current rank, or what the listing/account includes.",
+    freeform: true
+  },
+  {
+    key: 'goal',
+    bot: "What's the goal — target rank, which heist, amount, or what you want done?",
+    freeform: true
+  },
+  {
+    key: 'window',
+    bot: "Last one — when are you usually free to play or available to complete the trade?",
+    freeform: true
+  }
+];
+
+function renderStep() {
+  clearInputs();
+  if (step >= flow.length) {
+    finish();
+    return;
+  }
+  const s = flow[step];
+  addMsg(s.bot, 'bot');
+  if (s.choices) {
+    s.choices.forEach(c => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = c;
+      btn.onclick = () => answer(c);
+      choicesEl.appendChild(btn);
+    });
+  } else if (s.freeform) {
+    freeformRow.classList.add('active');
+    freeformInput.value = '';
+    freeformInput.focus();
+  }
+}
+
+function answer(value) {
+  const s = flow[step];
+  answers[s.key] = value;
+  addMsg(value, 'user');
+  step++;
+  setTimeout(renderStep, 350);
+}
+
+function submitFreeform() {
+  const val = freeformInput.value.trim();
+  if (!val) return;
+  answer(val);
+}
+
+freeformInput?.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') submitFreeform();
+});
+
+function finish() {
+  addMsg("Got it — here's what's going to dispatch:", 'bot');
+  summaryBox.classList.add('active');
+  summaryLines.innerHTML = `
+    <div class="line"><b>Job type:</b> ${answers.job || '—'}</div>
+    <div class="line"><b>Platform:</b> ${answers.platform || '—'}</div>
+    <div class="line"><b>Username/gamertag:</b> ${answers.handle || '—'}</div>
+    <div class="line"><b>Current status:</b> ${answers.current || '—'}</div>
+    <div class="line"><b>Goal:</b> ${answers.goal || '—'}</div>
+    <div class="line"><b>Available:</b> ${answers.window || '—'}</div>
+  `;
+  submitRow.style.display = 'block';
+
+  const subject = encodeURIComponent(`New job request: ${answers.job || 'Custom Job'}`);
+  const body = encodeURIComponent(
+`New job from the Nightshift Crew site:
+
+Job type: ${answers.job || '—'}
+Platform: ${answers.platform || '—'}
+Username/gamertag: ${answers.handle || '—'}
+Current status: ${answers.current || '—'}
+Goal: ${answers.goal || '—'}
+Available: ${answers.window || '—'}
+
+(No account password or login was collected — coordinate session/co-op or trade details directly with the customer.)`
+  );
+  submitBtn.href = `mailto:dispatch@yourdomain.com?subject=${subject}&body=${body}`;
+}
+
+renderStep();
+</script>
+
+</body>
+</html>
